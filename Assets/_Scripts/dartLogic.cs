@@ -54,14 +54,16 @@ public class dartLogic : MonoBehaviour
     void Update()
     {
         if (isLeft)
-        {
-            if (transform.position.x > 3.1f)
+        {   
+            rb.velocity = new Vector2(3f, 0f);
+            if (transform.position.x > 2.9f)
             {
                 Destroy(gameObject);
             }
         }else
-        {
-            if (transform.position.x < -3.1f)
+        {   
+            rb.velocity = new Vector2(-3f, 0f);
+            if (transform.position.x < -2.9f)
             {
                 Destroy(gameObject);
             }

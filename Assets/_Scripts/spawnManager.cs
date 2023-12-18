@@ -15,9 +15,13 @@ public class spawnManager : MonoBehaviour
     [SerializeField] float minPowerSpawn = 5f;
     [SerializeField] float maxPowerSpawn = 10f;
 
+    [SerializeField] float minDartSpawn = 15f;
+    [SerializeField] float maxDartSpawn = 30f;
+
 
     [SerializeField] float randomPinSpawn;
     [SerializeField] float randomPowerSpawn;
+    [SerializeField] float randomDartSpawn;
     
 
 
@@ -26,6 +30,8 @@ public class spawnManager : MonoBehaviour
 
  
     public GameObject[] objPowerUps = new GameObject[3];
+    public GameObject objDart;
+    public GameObject[] objWarning = new GameObject[2];
     
     void Awake()
     {
@@ -37,6 +43,9 @@ public class spawnManager : MonoBehaviour
         randomPinSpawn = Random.Range(minPinSpawn, maxPinSpawn);
         randomPowerUp = Random.Range(0, 3);
         randomPowerSpawn = Random.Range(minPowerSpawn, maxPowerSpawn);
+        randomDartSpawn = Random.Range(minDartSpawn, maxDartSpawn);
+        objWarning[0].SetActive(false);
+        objWarning[1].SetActive(false);
 
     }
 
@@ -50,9 +59,11 @@ public class spawnManager : MonoBehaviour
                 minPowerSpawn = 5f;
                 maxPinSpawn = 3f;
                 minPinSpawn = 1f;
+                minDartSpawn = 15f;
+                maxDartSpawn = 30f;
                 break;
             case GameState.Playing:
-                canSpawn = false;
+                canSpawn = true;
                 break;
             case GameState.Paused:
                 canSpawn = false;
@@ -70,6 +81,7 @@ public class spawnManager : MonoBehaviour
         {
             spawnPin();
             spawnPower();  
+            spawnDart();
         }
     }
 
@@ -103,6 +115,36 @@ public class spawnManager : MonoBehaviour
             randomPowerSpawn = Random.Range(minPowerSpawn, maxPowerSpawn);
             randomPowerUp = Random.Range(0, 3);
         }
+    }
+
+    private void spawnDart()
+    {
+        int randomSide = Random.Range(0, 2);
+        randomDartSpawn -= Time.deltaTime;
+        if (randomDartSpawn <= 0)
+        {
+            
+            StartCoroutine(spawnWarning(randomSide));
+            randomDartSpawn = Random.Range(minDartSpawn, maxDartSpawn);
+        }
+    }
+
+    private IEnumerator spawnWarning(int side)
+    {
+        objWarning[side].SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        objWarning[side].SetActive(false);
+        yield return new WaitForSeconds(0.5f);
+        if (side == 0)
+        {
+            Instantiate(objDart, new Vector2(-2.9f, -4.7f), Quaternion.identity);
+        }
+        else
+        {
+            Instantiate(objDart, new Vector2(2.9f, -4.7f), Quaternion.identity);
+        }
+
+        
     }
     
 }
